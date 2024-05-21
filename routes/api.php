@@ -17,7 +17,7 @@ Route::get('/jogador', [PlayerController::class, 'index']);
 
 //Rotas para o treinador
 Route::get('/treinador', [ManagerController::class, 'index']);
-Route::post('/treinadorAdd', [ManagerController::class, 'store']);
+Route::post('/treinadorAdd', [ManagerController::class, 'store'])->middleware('auth:sanctum');
 
 //Rotas para o time
 Route::get('/time', [TeamController::class, 'index']);

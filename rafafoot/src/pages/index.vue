@@ -1,5 +1,5 @@
 <template>
-  <Game />
+  <Layout />
 </template>
 
 <script setup>
