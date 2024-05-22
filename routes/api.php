@@ -27,3 +27,4 @@ Route::get('/campeonato', [ChampionshipController::class, 'index']);
 
 //Rotas para o jogo
 Route::get('/process-round', [GameController::class, 'processRound']);
+Route::get('/simulate-goals', [GameController::class, 'simulateGoals']);

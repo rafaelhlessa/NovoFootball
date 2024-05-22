@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('position');
-            $table->integer('age');
             $table->integer('strength');
             $table->integer('goals');
-            $table->integer('yellow_cards')->nullable();
             $table->integer('red_cards')->nullable();
             $table->integer('price');
+            $table->integer('salary');
+            $table->boolean('star');
             $table->foreignId('team_id')->references('id')->on('teams');
             $table->timestamps();
 

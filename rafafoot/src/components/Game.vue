@@ -2,13 +2,6 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-const divisions = [
-  {name: 'Divisão 1', serie: 1},
-  {name: 'Divisão 2', serie: 2},
-  {name: 'Divisão 3', serie: 3},
-  {name: 'Divisão 4', serie: 4}
-];
-
 const roundResults = ref({});
 const headers = [
   { text: 'Público', value: 'audience' },
@@ -19,43 +12,56 @@ const headers = [
   { text: 'Equipe Visitante', value: 'away_team' },
 ];
 
-const serie = ref([]);
+
 const results = async () => {
     const response = await axios.get('http://localhost:8000/api/process-round');
     roundResults.value = response.data;
-    roundResults.value.forEach(item => {
-        if (item.serie === divisions.serie) {
-            serie.value = item.division;
-        }
-    });
+    // roundResults.value.forEach(item => {
+    //   console.log(item);
+    // });
+
+    // console.log(roundResults.value);
 }
+
+const homeGoals = ref(0);
+const awayGoals = ref(0);
+
+const updateGoals = async () => {
+
+};
+
 
 onMounted(async () => {
     await results();
+    await updateGoals();
 });
 </script>
 
 <template>
   <v-container>
+    <div><p>Tempo decorrido: {{ tempoDecorrido }} segundos</p></div>
     <v-row>
-      <v-col v-for="division in divisions" :key="division" cols="12" md="6">
+      <v-col v-for="(data, division) in roundResults" :key="division" cols="12" md="6">
         <v-card>
-          <v-card-title>{{ division.name }}</v-card-title>
+          <v-card-title>{{ division }}</v-card-title>
+          <v-divider></v-divider>
           <v-card-text>
             <v-table>
               <thead>
-              <tr>
+              <!-- <tr>
                   <th v-for="header in headers" :key="header.text">{{ header.text }}</th>
-              </tr>
+              </tr> -->
               </thead>
-              <tbody v-for="item in roundResults" :key="item.division">
-              <tr :class="item.home_goals > item.away_goals? 'green--text' :'red--text'">
+              <tbody>
+                <tr v-for="item in data" :key="item.division"  :class="item.home_goals > item.away_goals? 'green--text' :'red--text'">
                   <td>{{item.audience}}</td>
                   <td>{{item.home_team}}</td>
                   <td>{{item.events.home_goals}}</td>
-                  <td> x </td>
+                  <td> X </td>
                   <td>{{item.events.away_goals}}</td>
                   <td>{{item.away_team}}</td>
+
+
               </tr>
               </tbody>
             </v-table>

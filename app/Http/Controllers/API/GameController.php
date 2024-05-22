@@ -24,7 +24,7 @@ class GameController extends Controller
                 $awayTeam = $teams[$i + 1];
 
                 $matchResult = $this->simulateMatch($homeTeam, $awayTeam);
-                array_push($matches, $matchResult);
+                $matches['Divisão ' . $division][] = $matchResult;
             }
         }
 
@@ -33,6 +33,33 @@ class GameController extends Controller
 
     private function simulateMatch($homeTeam, $awayTeam)
     {
+        // $homeDivision = $homeTeam->championship_id;
+        // $awayDivision = $awayTeam->championship_id;
+
+        // $homeDivisionTeams = Team::where('championship_id', $homeDivision)->get();
+        // $awayDivisionTeams = Team::where('championship_id', $awayDivision)->get();
+
+        // $homeStrength = $this->calculateTeamStrength($homeTeam);
+        // $awayStrength = $this->calculateTeamStrength($awayTeam);
+        // // Implementar lógica de simulação de eventos
+        // $events = $this->simulateEvents($homeStrength, $awayStrength);
+        // $audience = $this->calculateAudience($homeTeam);
+
+        // $match = [
+        //     'home_team' => $homeTeam->name,
+        //     'away_team' => $awayTeam->name,
+        //     'game_division' => $homeDivision,
+        //     'events' => $events,
+        //     'audience' => $audience,
+        // ];
+
+
+        // // Adicione o jogo ao array de jogos separado por divisão
+        // $divisionMatches[$homeDivision][] = $match;
+        // $divisionMatches[$awayDivision][] = $match;
+
+        // return $match;
+
         $homeStrength = $this->calculateTeamStrength($homeTeam);
         $awayStrength = $this->calculateTeamStrength($awayTeam);
 
@@ -60,24 +87,69 @@ class GameController extends Controller
         return $strength;
     }
 
+    public function simulateGoals(Request $request)
+    {
+        $homeTeam = [true, false, true, false, true];
+        $awayTeam = [false, true, false, true, false];
+
+        $homeGoals = 0;
+        $awayGoals = 0;
+
+        for ($i = 1; $i <= 20; $i++) {
+            if ($homeTeam[$i % count($homeTeam)] === true) {
+                $homeGoals++;
+            }
+            if ($awayTeam[$i % count($awayTeam)] === true) {
+                $awayGoals++;
+            }
+            sleep(1);
+            // Pode retornar os gols a cada iteração, se necessário
+            // return response()->json([
+            //     'home_goals' => $homeGoals,
+            //     'away_goals' => $awayGoals,
+            // ]);
+        }
+
+        // Fora do loop, após 20 segundos, retorna os gols
+        return response()->json([
+            'home_goals' => $homeGoals,
+            'away_goals' => $awayGoals,
+        ]);
+    }
+
+
     private function simulateEvents($homeStrength, $awayStrength)
     {
-        // Simule eventos baseados na força dos times e outros fatores
-//        $events = [
-//            'goals' => rand(0, 7),
-//            'red_cards' => rand(0, 1),
-//            'injuries' => rand(0, 1),
-//            'penalties' => rand(0, 1),
-//        ];
+        $homeTeam = [1, 2, 3, 4, 5, 6];
+        $awayTeam = [1, 2, 3, 4, 5, 6];
+
+        $homeGoals = 0;
+        $awayGoals = 0;
+
+        foreach ($homeTeam as $key => $value) {
+            if (mt_rand(0, 3) === 3) {
+                $homeGoals++;
+            }
+            // if ($homeTeam[$key] === true) {
+            //     $homeGoals++;
+            // }
+        }
+
+        foreach ($awayTeam as $key => $value) {
+            if (mt_rand(0, 2) === 2) {
+                $awayGoals++;
+            }
+        }
+
 
 //        implementar a lógica de simulação de eventos distribuindo os valores entre os times
         $events = [
-            'home_goals' => rand(0, 5),
-            'away_goals' => rand(0, 4),
-            'red_cards_home' => rand(0, 1),
-            'red_cards_away' => rand(0, 1),
-            'injuries_home' => rand(0, 1),
-            'injuries_away' => rand(0, 1),
+            'home_goals' => $homeGoals,
+            'away_goals' => $awayGoals,
+            // 'red_cards_home' => rand(0, 1),
+            // 'red_cards_away' => rand(0, 1),
+            // 'injuries_home' => rand(0, 1),
+            // 'injuries_away' => rand(0, 1),
 //            'penalties_home' => rand(0, 1),
 //            'penalties_away' => rand(0, 1),
 

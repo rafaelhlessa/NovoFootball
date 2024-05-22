@@ -17,7 +17,9 @@ return new class extends Migration
             $table->integer('capacity');
             $table->foreignId('championship_id');
             $table->boolean('loan')->nullable();
-            $table->foreignId('manager_id');
+            $table->foreignId('manager_id')->nullable();
+            $table->integer('morale')->default(10);
+            $table->integer('money')->default(1000000);
             $table->timestamps();
 
 

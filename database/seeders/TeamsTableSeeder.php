@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use Faker\Factory as FakerFactory;
+use App\Providers\CustomFakerProvider;
 
 class TeamsTableSeeder extends Seeder
 {
@@ -14,18 +16,24 @@ class TeamsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
+        $faker = FakerFactory::create();
+
+        // Add your custom provider
+        $faker->addProvider(new CustomFakerProvider($faker));
 
         // Define number of fake records you want to create
-        $numTeams = 40;
+        $numTeams = 32;
 
         for ($i = 0; $i < $numTeams; $i++) {
+            $championshipId = $faker->numberBetween(1, 4);
+
             DB::table('teams')->insert([
                 'name' => $faker->unique()->word . ' FC',
-                'capacity' => $faker->numberBetween(2000, 80000),
-                'championship_id' => $faker->numberBetween(1, 4), // Assuming championships have IDs from 1 to 10
+                'capacity' => $faker->teamCapacity($championshipId),
+                'championship_id' => $championshipId,
                 'loan' => $faker->boolean(20), // 20% chance of having a loan
-                'manager_id' => $faker->numberBetween(1, 6), // Assuming managers have IDs from 1 to 20
+                'morale' => $faker->teamMorale(),
+                'money' => $faker->teamMoney($championshipId),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
